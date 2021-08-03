@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 
 class ModelProvider extends ChangeNotifier {
-  // ModelProvider();
-
   String _usuario = '';
 
   String get usuario => _usuario;
