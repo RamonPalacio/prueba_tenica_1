@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                         obscureText: provider.ofuscate,
                         decoration: InputDecoration(
                           fillColor: Color(0xFF5A5A5A),
-                          // filled: true,
+                          filled: true,
                           hoverColor: Color(0x00FF0000),
                           border: OutlineInputBorder(
                             borderRadius:
@@ -114,7 +114,9 @@ class _LoginPageState extends State<LoginPage> {
                           //! BOTON btn_SignIn
                           suffixIcon: IconButton(
                             onPressed: () => loginCore.btnOfuscar(provider),
-                            icon: Icon(Icons.remove_red_eye),
+                            icon: Icon(provider.ofuscate
+                                ? Icons.remove_red_eye_rounded
+                                : Icons.remove_red_eye_outlined),
                           ),
                         ),
                       ),
