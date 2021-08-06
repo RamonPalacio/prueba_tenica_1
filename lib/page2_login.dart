@@ -1,23 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:prueba_tecnica_1/ExitoLogin.dart';
-import 'package:prueba_tecnica_1/provider_stados.dart';
-import 'package:prueba_tecnica_1/registrousuario.dart';
+import 'package:prueba_tecnica_1/mainCore.dart';
+import 'package:prueba_tecnica_1/mainModelProvider.dart';
 
-class Login_Page extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  _Login_PageState createState() => _Login_PageState();
+  _LoginPageState createState() {
+    return _LoginPageState();
+  }
 }
 
-class _Login_PageState extends State<Login_Page> {
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController userControler = TextEditingController();
+  final TextEditingController passControler = TextEditingController();
+
+  @override
+  void dispose() {
+    userControler.dispose();
+    passControler.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    ModelProvider provider = Provider.of<ModelProvider>(context, listen: false);
+    super.initState();
+    userControler.text = provider.usuario;
+    passControler.text = provider.password;
+  }
+
   @override
   Widget build(BuildContext context) {
-    ModelProvider provider = Provider.of<ModelProvider>(context, listen: false);
-    final user_controler = TextEditingController(text: provider.usuario);
+    ModelProvider provider = Provider.of<ModelProvider>(context, listen: true);
 
-    final TextEditingController pass_controler =
-        TextEditingController(text: provider.password);
     return Scaffold(
       backgroundColor: const Color(0xFF191A1F),
       body: SafeArea(
@@ -54,14 +69,10 @@ class _Login_PageState extends State<Login_Page> {
                   SizedBox(
                     // height: 0,
                     width: MediaQuery.of(context).size.width - 100,
+                    //! TEXTBOX User
                     child: TextField(
-                      // autofocus: false,
-                      onChanged: (text) {
-                        provider.usuario = text;
-                        user_controler.selection = TextSelection.fromPosition(
-                            TextPosition(offset: user_controler.text.length));
-                      },
-                      controller: user_controler,
+                      onChanged: (text) => provider.usuario = text,
+                      controller: userControler,
                       style:
                           TextStyle(fontSize: 25.0, color: Color(0xFFFFFFFF)),
                       decoration: InputDecoration(
@@ -82,13 +93,10 @@ class _Login_PageState extends State<Login_Page> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 100,
                     child: Container(
+                      //! TEXTBOX Password
                       child: TextField(
-                        onChanged: (text) {
-                          provider.password = text;
-                          pass_controler.selection = TextSelection.fromPosition(
-                              TextPosition(offset: pass_controler.text.length));
-                        },
-                        controller: pass_controler,
+                        onChanged: (text) => provider.password = text,
+                        controller: passControler,
                         style: TextStyle(
                           fontSize: 22.0,
                           color: Color(0xFFFFFFFF),
@@ -96,18 +104,16 @@ class _Login_PageState extends State<Login_Page> {
                         obscureText: provider.ofuscate,
                         decoration: InputDecoration(
                           fillColor: Color(0xFF5A5A5A),
-                          filled: true,
+                          // filled: true,
                           hoverColor: Color(0x00FF0000),
                           border: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           labelText: 'Password',
+                          //! BOTON btn_SignIn
                           suffixIcon: IconButton(
-                            onPressed: () {
-                              provider.ofuscate = !provider.ofuscate;
-                              setState(() {});
-                            },
+                            onPressed: () => loginCore.btnOfuscar(provider),
                             icon: Icon(Icons.remove_red_eye),
                           ),
                         ),
@@ -131,6 +137,7 @@ class _Login_PageState extends State<Login_Page> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 100,
                     height: 50,
+                    //! BOTON btn_Sumit
                     child: ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
@@ -145,28 +152,7 @@ class _Login_PageState extends State<Login_Page> {
                                     borderRadius: BorderRadius.circular(18.0),
                                     side: BorderSide(
                                         color: Colors.transparent)))),
-                        onPressed: () => {
-                              if (provider.password == "12345" &&
-                                  provider.usuario == "admin")
-                                {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ExitoLogin()),
-                                  )
-                                }
-                              else
-                                {
-                                  Fluttertoast.showToast(
-                                      msg: "User or pasword invalid.",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.CENTER,
-                                      timeInSecForIosWeb: 10,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
-                                      fontSize: 15.0),
-                                }
-                            },
+                        onPressed: () => loginCore.btnSumit(context),
                         child: Text(
                           "Sign In",
                           style: TextStyle(fontSize: 20),
@@ -212,20 +198,17 @@ class _Login_PageState extends State<Login_Page> {
                         style:
                             TextStyle(fontSize: 20, color: Color(0xFF555555)),
                       ),
+                      //! BOTON btn_SignIn
                       TextButton(
-                          child: Text(
-                            "Sign In",
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Color(0xFF0099FF),
-                                fontWeight: FontWeight.bold),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => RegistroPage()));
-                          }),
+                        child: Text(
+                          "Sign In",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Color(0xFF0099FF),
+                              fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () => loginCore.btnSignIn(context),
+                      ),
                       Expanded(child: SizedBox()),
                     ],
                   ),

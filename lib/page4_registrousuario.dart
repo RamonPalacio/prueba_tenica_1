@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:prueba_tecnica_1/provider_stados.dart';
+import 'package:prueba_tecnica_1/mainModelProvider.dart';
 
 class RegistroPage extends StatefulWidget {
-  const RegistroPage({Key? key}) : super(key: key);
-
   @override
   _RegistroPageState createState() => _RegistroPageState();
 }
@@ -48,12 +46,10 @@ class _RegistroPageState extends State<RegistroPage> {
                   ),
                   SizedBox(height: 30),
                   SizedBox(
-                    // height: 0,
                     width: MediaQuery.of(context).size.width - 100,
                     child: Column(
                       children: [
                         TextField(
-                          // autofocus: true,
                           style: TextStyle(
                               fontSize: 25.0, color: Color(0xFFFFFFFF)),
                           decoration: InputDecoration(
@@ -93,13 +89,6 @@ class _RegistroPageState extends State<RegistroPage> {
                           height: 10,
                         ),
                         TextField(
-                          // autofocus: false,
-                          // onChanged: (text) {
-                          //   if (double.tryParse(text) != null) {
-                          //     text = "";
-                          //   }
-                          // },
-                          // controller: user_controler,
                           style: TextStyle(
                               fontSize: 25.0, color: Color(0xFFFFFFFF)),
                           keyboardType: TextInputType.number,
@@ -110,7 +99,6 @@ class _RegistroPageState extends State<RegistroPage> {
                                   BorderSide(color: Colors.red, width: 20),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20.0)),
-                              // borderSide: BorderSide(color: Colors.red)),
                             ),
                             labelText: 'Phone Number',
                             fillColor: Color(0xFF5A5A5A),
@@ -129,7 +117,6 @@ class _RegistroPageState extends State<RegistroPage> {
                         style: TextStyle(
                           fontSize: 22.0,
                           color: Color(0xFFFFFFFF),
-                          // backgroundColor: Color(0xFF1EFF00),
                         ),
                         obscureText: provider.ofuscate,
                         decoration: InputDecoration(
@@ -141,7 +128,6 @@ class _RegistroPageState extends State<RegistroPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           labelText: 'Password',
-                          // hintText: "Input Password",
                           suffixIcon: IconButton(
                             onPressed: () {
                               provider.ofuscate = !provider.ofuscate;

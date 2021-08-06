@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ExitoLogin extends StatelessWidget {
-  const ExitoLogin({Key? key}) : super(key: key);
-
+class ExitoLoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
