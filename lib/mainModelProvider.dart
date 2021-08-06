@@ -26,9 +26,7 @@ class ModelProvider extends ChangeNotifier {
   }
 
 //? GETofuscadopass
-  bool get ofuscate {
-    return _login["ofuscadopass"];
-  }
+  bool get ofuscate => _login["ofuscadopass"];
 
 //? SETofuscadopass
   set ofuscate(bool newValue) {
