@@ -25,8 +25,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     ModelProvider provider = Provider.of<ModelProvider>(context, listen: false);
     super.initState();
-    userControler.text = provider.usuario;
-    passControler.text = provider.password;
+    userControler.text = provider.getLoginModel("usuario");
+    passControler.text = provider.getLoginModel("password");
   }
 
   @override
@@ -70,56 +70,16 @@ class _LoginPageState extends State<LoginPage> {
                     // height: 0,
                     width: MediaQuery.of(context).size.width - 100,
                     //! TEXTBOX User
-                    child: TextField(
-                      onChanged: (text) => provider.usuario = text,
-                      controller: userControler,
-                      style:
-                          TextStyle(fontSize: 25.0, color: Color(0xFFFFFFFF)),
-                      decoration: InputDecoration(
-                        hoverColor: Color(0x00FF0000),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red, width: 20),
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          // borderSide: BorderSide(color: Colors.red)),
-                        ),
-                        labelText: 'User',
-                        fillColor: Color(0xFF5A5A5A),
-                        filled: true,
-                        suffixIcon: const Icon(Icons.lock),
-                      ),
-                    ),
+                    child: TextUser(
+                        provider: provider, userControler: userControler),
                   ),
                   SizedBox(height: 15),
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 100,
                     child: Container(
                       //! TEXTBOX Password
-                      child: TextField(
-                        onChanged: (text) => provider.password = text,
-                        controller: passControler,
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Color(0xFFFFFFFF),
-                        ),
-                        obscureText: provider.ofuscate,
-                        decoration: InputDecoration(
-                          fillColor: Color(0xFF5A5A5A),
-                          filled: true,
-                          hoverColor: Color(0x00FF0000),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                          ),
-                          labelText: 'Password',
-                          //! BOTON btn_SignIn
-                          suffixIcon: IconButton(
-                            onPressed: () => loginCore.btnOfuscar(provider),
-                            icon: Icon(provider.ofuscate
-                                ? Icons.remove_red_eye_rounded
-                                : Icons.remove_red_eye_outlined),
-                          ),
-                        ),
-                      ),
+                      child: TextPasword(
+                          provider: provider, passControler: passControler),
                     ),
                   ),
                   SizedBox(height: 15),
@@ -140,25 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: MediaQuery.of(context).size.width - 100,
                     height: 50,
                     //! BOTON btn_Sumit
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Color.fromRGBO(84, 104, 255, 50)),
-                            padding: MaterialStateProperty.all<EdgeInsets>(
-                                EdgeInsets.all(10)),
-                            foregroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    side: BorderSide(
-                                        color: Colors.transparent)))),
-                        onPressed: () => loginCore.btnSumit(context),
-                        child: Text(
-                          "Sign In",
-                          style: TextStyle(fontSize: 20),
-                        )),
+                    child: BtnSumit(),
                   ),
                   SizedBox(
                     height: 20,
@@ -166,28 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 100,
                     height: 50,
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Color(0xFFB4B4B4)),
-                            padding: MaterialStateProperty.all<EdgeInsets>(
-                                EdgeInsets.all(10)),
-                            foregroundColor: MaterialStateProperty.all<Color>(
-                                Color(0xFF000000)),
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    side: BorderSide(
-                                        color: Colors.transparent)))),
-                        //Boton[index]
-                        onPressed: null,
-                        child: Text(
-                          "Sign In with Google",
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        )),
+                    child: BtnSignInGoogle(),
                   ),
                   SizedBox(
                     height: 20,
@@ -201,16 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                             TextStyle(fontSize: 20, color: Color(0xFF555555)),
                       ),
                       //! BOTON btn_SignIn
-                      TextButton(
-                        child: Text(
-                          "Sign In",
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: Color(0xFF0099FF),
-                              fontWeight: FontWeight.bold),
-                        ),
-                        onPressed: () => loginCore.btnSignIn(context),
-                      ),
+                      BtnSignIn(),
                       Expanded(child: SizedBox()),
                     ],
                   ),
@@ -220,6 +132,151 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ]),
       ),
+    );
+  }
+}
+
+class TextUser extends StatelessWidget {
+  const TextUser({
+    required this.provider,
+    required this.userControler,
+  });
+
+  final ModelProvider provider;
+  final TextEditingController userControler;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      onChanged: (text) => provider.setLoginModel("usuario", text),
+      controller: userControler,
+      style: TextStyle(fontSize: 25.0, color: Color(0xFFFFFFFF)),
+      decoration: InputDecoration(
+        hoverColor: Color(0x00FF0000),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        ),
+        labelText: 'User',
+        fillColor: Color(0xFF5A5A5A),
+        filled: true,
+        suffixIcon: const Icon(Icons.lock),
+      ),
+    );
+  }
+}
+
+class TextPasword extends StatelessWidget {
+  const TextPasword({
+    required this.provider,
+    required this.passControler,
+  });
+
+  final ModelProvider provider;
+  final TextEditingController passControler;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      autofocus: false,
+      onChanged: (text) => provider.setLoginModel("password", text),
+      controller: passControler,
+      style: TextStyle(
+        fontSize: 22.0,
+        color: Color(0xFFFFFFFF),
+      ),
+      obscureText: provider.getLoginModel("ofuscadopass"),
+      decoration: InputDecoration(
+        fillColor: Color(0xFF5A5A5A),
+        filled: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        ),
+        labelText: 'Password',
+        //! BOTON btn_SignIn
+        suffixIcon: BtnOfuscar(provider: provider),
+      ),
+    );
+  }
+}
+
+class BtnOfuscar extends StatelessWidget {
+  const BtnOfuscar({
+    required this.provider,
+  });
+
+  final ModelProvider provider;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () => loginCore.btnOfuscar(provider),
+      icon: Icon(provider.getLoginModel("ofuscadopass")
+          ? Icons.remove_red_eye_rounded
+          : Icons.remove_red_eye_outlined),
+    );
+  }
+}
+
+class BtnSumit extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(
+                Color.fromRGBO(84, 104, 255, 50)),
+            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(10)),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.transparent)))),
+        onPressed: () {
+          loginCore.btnSumit(context);
+        },
+        child: Text(
+          "Sign In",
+          style: TextStyle(fontSize: 20),
+        ));
+  }
+}
+
+class BtnSignInGoogle extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Color(0xFFB4B4B4)),
+            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(10)),
+            foregroundColor:
+                MaterialStateProperty.all<Color>(Color(0xFF000000)),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.transparent)))),
+        //Boton[index]
+        onPressed: null,
+        child: Text(
+          "Sign In with Google",
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ));
+  }
+}
+
+class BtnSignIn extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      child: Text(
+        "Sign In",
+        style: TextStyle(
+            fontSize: 20,
+            color: Color(0xFF0099FF),
+            fontWeight: FontWeight.bold),
+      ),
+      onPressed: () => loginCore.btnSignIn(context),
     );
   }
 }

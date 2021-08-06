@@ -11,7 +11,7 @@ class ExitoLoginPage extends StatelessWidget {
             child: Image(
                 image: AssetImage('assets/fondo2.png'),
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 1,
+                height: MediaQuery.of(context).size.height,
                 fit: BoxFit.cover),
           ),
         ]),

@@ -8,29 +8,29 @@ class ModelProvider extends ChangeNotifier {
     "ofuscadopass": true,
   };
 
-//? GETusuario
-  String get usuario => _login["usuario"];
-//? SETusuario
-  set usuario(String newValue) {
-    _login["usuario"] = newValue;
+  dynamic getLoginModel(value) {
+    return _login[value];
+  }
+
+  void setLoginModel(String variable, dynamic newValue) {
+    _login[variable] = newValue;
     notifyListeners();
   }
 
-//? Getpassword
-  String get password => _login["password"];
-//? SETpassword
-  set password(String newValue) {
-    _login["password"] = newValue;
-    print("cambio");
-    notifyListeners();
+  Map _registro = {
+    "name": "",
+    "email": "",
+    "phone": "",
+    "password": "",
+    "ofuscadopass": true,
+  };
+
+  dynamic getRegistroModel(value) {
+    return _registro[value];
   }
 
-//? GETofuscadopass
-  bool get ofuscate => _login["ofuscadopass"];
-
-//? SETofuscadopass
-  set ofuscate(bool newValue) {
-    _login["ofuscadopass"] = newValue;
+  void setRegistroModel(String variable, dynamic newValue) {
+    _registro[variable] = newValue;
     notifyListeners();
   }
 }

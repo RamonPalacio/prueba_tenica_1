@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:prueba_tecnica_1/MainCore.dart';
 import 'package:prueba_tecnica_1/mainModelProvider.dart';
 
 class RegistroPage extends StatefulWidget {
@@ -8,9 +9,33 @@ class RegistroPage extends StatefulWidget {
 }
 
 class _RegistroPageState extends State<RegistroPage> {
+  final TextEditingController nameControler = TextEditingController();
+  final TextEditingController emailControler = TextEditingController();
+  final TextEditingController phoneControler = TextEditingController();
+  final TextEditingController passControler = TextEditingController();
+
+  @override
+  void dispose() {
+    nameControler.dispose();
+    emailControler.dispose();
+    phoneControler.dispose();
+    passControler.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    ModelProvider provider = Provider.of<ModelProvider>(context, listen: false);
+    super.initState();
+    nameControler.text = provider.getRegistroModel("name");
+    emailControler.text = provider.getRegistroModel("email");
+    phoneControler.text = provider.getRegistroModel("phone");
+    passControler.text = provider.getRegistroModel("password");
+  }
+
   @override
   Widget build(BuildContext context) {
-    ModelProvider provider = Provider.of<ModelProvider>(context, listen: false);
+    ModelProvider provider = Provider.of<ModelProvider>(context, listen: true);
 
     return Scaffold(
       backgroundColor: const Color(0xFF191A1F),
@@ -49,62 +74,14 @@ class _RegistroPageState extends State<RegistroPage> {
                     width: MediaQuery.of(context).size.width - 100,
                     child: Column(
                       children: [
-                        TextField(
-                          style: TextStyle(
-                              fontSize: 25.0, color: Color(0xFFFFFFFF)),
-                          decoration: InputDecoration(
-                            hoverColor: Color(0x00FF0000),
-                            border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.red, width: 20),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20.0)),
-                            ),
-                            labelText: 'Full Name',
-                            fillColor: Color(0xFF5A5A5A),
-                            filled: true,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextField(
-                          style: TextStyle(
-                              fontSize: 25.0, color: Color(0xFFFFFFFF)),
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            hoverColor: Color(0x00FF0000),
-                            border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.red, width: 20),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20.0)),
-                            ),
-                            labelText: 'Email Address',
-                            fillColor: Color(0xFF5A5A5A),
-                            filled: true,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextField(
-                          style: TextStyle(
-                              fontSize: 25.0, color: Color(0xFFFFFFFF)),
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            hoverColor: Color(0x00FF0000),
-                            border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.red, width: 20),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20.0)),
-                            ),
-                            labelText: 'Phone Number',
-                            fillColor: Color(0xFF5A5A5A),
-                            filled: true,
-                          ),
-                        ),
+                        //! TEXTBOX FullName
+                        FullName(provider, "name", nameControler, "Full Name"),
+                        SizedBox(height: 10),
+                        FullName(
+                            provider, "email", emailControler, "Email Address"),
+                        SizedBox(height: 10),
+                        FullName(
+                            provider, "phone", phoneControler, "Phone Number"),
                       ],
                     ),
                   ),
@@ -113,12 +90,14 @@ class _RegistroPageState extends State<RegistroPage> {
                     width: MediaQuery.of(context).size.width - 100,
                     child: Container(
                       child: TextField(
-                        // controller: pass_controler,
+                        onChanged: (text) =>
+                            provider.setRegistroModel("password", text),
+                        controller: passControler,
                         style: TextStyle(
                           fontSize: 22.0,
                           color: Color(0xFFFFFFFF),
                         ),
-                        obscureText: provider.ofuscate,
+                        obscureText: provider.getRegistroModel("ofuscadopass"),
                         decoration: InputDecoration(
                           fillColor: Color(0xFF5A5A5A),
                           filled: true,
@@ -128,12 +107,8 @@ class _RegistroPageState extends State<RegistroPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           labelText: 'Password',
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              provider.ofuscate = !provider.ofuscate;
-                              setState(() {});
-                            },
-                            icon: Icon(Icons.remove_red_eye),
+                          suffixIcon: BtnOfuscar(
+                            provider: provider,
                           ),
                         ),
                       ),
@@ -194,6 +169,52 @@ class _RegistroPageState extends State<RegistroPage> {
           ),
         ]),
       ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class FullName extends StatelessWidget {
+  FullName(
+      this.provider, this.providerPropiedad, this.passControler, this.caption);
+
+  ModelProvider provider;
+  final TextEditingController passControler;
+  final String caption;
+  final String providerPropiedad;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      onChanged: (text) => provider.setRegistroModel(providerPropiedad, text),
+      controller: passControler,
+      style: TextStyle(fontSize: 25.0, color: Color(0xFFFFFFFF)),
+      decoration: InputDecoration(
+        labelText: caption,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        ),
+        filled: true,
+        fillColor: Color(0xFF5A5A5A),
+      ),
+    );
+  }
+}
+
+class BtnOfuscar extends StatelessWidget {
+  const BtnOfuscar({
+    required this.provider,
+  });
+
+  final ModelProvider provider;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () => registroCore.btnOfuscar(provider),
+      icon: Icon(provider.getRegistroModel("ofuscadopass")
+          ? Icons.remove_red_eye_rounded
+          : Icons.remove_red_eye_outlined),
     );
   }
 }
